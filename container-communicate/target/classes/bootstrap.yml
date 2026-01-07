@@ -1,0 +1,24 @@
+server:
+  port: 9963
+  servlet:
+    context-path: /communicate
+
+spring:
+  application:
+    # 应用名称
+    name: container-communicate
+
+  profiles:
+    active: dev
+
+  cloud:
+    nacos:
+      discovery:
+        #服务注册地址
+        server-addr: 117.78.8.197:8848
+      config:
+        #服务配置中心地址
+        server-addr: 117.78.8.197:8848
+        file-extension: yaml
+        group: CONTAINER_GROUP
+        namespace: 241f0b80-1eec-4e06-8964-62be1a5739b5

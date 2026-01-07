@@ -1,0 +1,13 @@
+package cn.fuguang.manager;
+
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
+
+@SpringBootApplication
+@EnableDiscoveryClient
+@EnableFeignClients(basePackages = {"cn.fuguang.api"})
+@MapperScan("cn.fuguang.manager.mapper")
+public class ContainerManagerApplication {
+}

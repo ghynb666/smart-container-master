@@ -1,0 +1,24 @@
+server:
+  port: 9964
+  servlet:
+    context-path: /device
+
+spring:
+  application:
+    # 应用名称
+    name: container-device
+
+  profiles:
+    active: dev
+
+  cloud:
+    nacos:
+      discovery:
+        #服务注册地址
+        server-addr: 123.249.79.51:8848
+      config:
+        #服务配置中心地址
+        server-addr: 123.249.79.51:8848
+        file-extension: yaml
+        group: CONTAINER_GROUP
+        namespace: c5185dbc-6bf6-4fa2-afe7-15b12bc08ae1

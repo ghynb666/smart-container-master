@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="container-api" />
+        <module name="container-order" />
+        <module name="container-channel" />
+        <module name="container-communicate" />
+        <module name="container-account" />
+        <module name="container-common-core" />
+        <module name="container-common-rocketmq" />
+        <module name="container-common-redis" />
+        <module name="container-device" />
+        <module name="container-manager" />
+      </profile>
+    </annotationProcessing>
+  </component>
+</project>
