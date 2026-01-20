@@ -1,8 +1,0 @@
-cn\fuguang\manager\biz\impl\CouponBizImpl.class
-cn\fuguang\manager\controller\CouponController.class
-cn\fuguang\manager\service\impl\CouponServiceImpl.class
-cn\fuguang\manager\mapper\CouponMapper.class
-cn\fuguang\manager\pojo\vo\req\CouponConfigReq.class
-cn\fuguang\manager\ContainerManagerApplication.class
-cn\fuguang\manager\biz\CouponBiz.class
-cn\fuguang\manager\service\CouponService.class

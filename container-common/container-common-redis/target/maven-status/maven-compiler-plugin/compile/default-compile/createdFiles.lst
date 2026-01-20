@@ -1,4 +1,0 @@
-cn\fuguang\common\redis\configure\RedissonConfig.class
-cn\fuguang\common\redis\service\RedisService.class
-cn\fuguang\common\redis\configure\RedisConfig.class
-cn\fuguang\common\redis\configure\FastJson2JsonRedisSerializer.class
