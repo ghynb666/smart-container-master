@@ -40,5 +40,36 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
         </dependency>
+        
+        <!-- MQTT相关依赖 -->
+        <dependency>
+            <groupId>org.springframework.integration</groupId>
+            <artifactId>spring-integration-mqtt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.paho</groupId>
+            <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
+            <version>1.2.5</version>
+        </dependency>
+        
+        <!-- Redis依赖，用于设备连接映射 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        
+        <!-- 自定义Redis服务依赖 -->
+        <dependency>
+            <groupId>cn.fuguang</groupId>
+            <artifactId>container-common-redis</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        
+        <!-- 自定义RocketMQ服务依赖 -->
+        <dependency>
+            <groupId>cn.fuguang</groupId>
+            <artifactId>container-common-rocketmq</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 </project>

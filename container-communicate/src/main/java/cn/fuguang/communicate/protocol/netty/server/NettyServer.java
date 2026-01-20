@@ -1,7 +1,6 @@
 package cn.fuguang.communicate.protocol.netty.server;
 
-import cn.fuguang.communicate.protocol.netty.initializer.KeNaiServerChannelInitializer;
-import cn.fuguang.communicate.protocol.netty.initializer.YiNuoServerChannelInitializer;
+import cn.fuguang.communicate.protocol.netty.initializer.CustomServerChannelInitializer;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -19,73 +18,44 @@ import java.util.List;
 @Component
 @Slf4j
 public class NettyServer {
-    private final EventLoopGroup yiNuoBossGroup = new NioEventLoopGroup();
-    private final EventLoopGroup yiNuoWorkerGroup = new NioEventLoopGroup();
+    private final EventLoopGroup bossGroup = new NioEventLoopGroup();
+    private final EventLoopGroup workerGroup = new NioEventLoopGroup();
 
-    private final EventLoopGroup keNaiBossGroup = new NioEventLoopGroup();
-
-    private final EventLoopGroup keNaiWorkerGroup = new NioEventLoopGroup();
-
-    private Channel yiNuoChannel;
-
-    private Channel keNaiChannel;
+    private Channel channel;
 
     public List<ChannelFuture> run(InetSocketAddress keNaiAddress, InetSocketAddress yiNuoAddress) {
-
-        ChannelFuture kaiNaiChannelFuture = null;
+        // 注意：这里简化了实现，只启动一个Netty服务器，使用自定义Channel初始化器
+        // 实际项目中可以根据需要启动多个服务器实例
+        ChannelFuture channelFuture = null;
         try {
             ServerBootstrap b = new ServerBootstrap();
-            b.group(keNaiBossGroup, keNaiWorkerGroup)
+            b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
-                    .childHandler(new KeNaiServerChannelInitializer())
+                    .childHandler(new CustomServerChannelInitializer())
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
-            kaiNaiChannelFuture = b.bind(keNaiAddress).syncUninterruptibly();
-            keNaiChannel = kaiNaiChannelFuture.channel();
+            channelFuture = b.bind(keNaiAddress).syncUninterruptibly();
+            channel = channelFuture.channel();
         } catch (Exception e) {
             log.error("Netty start error:", e);
         } finally {
-            if (kaiNaiChannelFuture != null && kaiNaiChannelFuture.isSuccess()) {
+            if (channelFuture != null && channelFuture.isSuccess()) {
                 log.info("Netty server listening " + keNaiAddress.getHostName() + " on port " + keNaiAddress.getPort() + " and ready for connections...");
             } else {
                 log.error("Netty server start up Error!");
             }
         }
 
-        ChannelFuture yiNuoChannelFuture = null;
-        try {
-            ServerBootstrap b = new ServerBootstrap();
-            b.group(yiNuoBossGroup, yiNuoWorkerGroup)
-                    .channel(NioServerSocketChannel.class)
-                    .childHandler(new YiNuoServerChannelInitializer())
-                    .childOption(ChannelOption.SO_KEEPALIVE, true);
-            yiNuoChannelFuture = b.bind(yiNuoAddress).syncUninterruptibly();
-            yiNuoChannel = yiNuoChannelFuture.channel();
-        } catch (Exception e) {
-            log.error("Netty start error:", e);
-        } finally {
-            if (yiNuoChannelFuture != null && yiNuoChannelFuture.isSuccess()) {
-                log.info("Netty server listening " + yiNuoAddress.getHostName() + " on port " + yiNuoAddress.getPort() + " and ready for connections...");
-            } else {
-                log.error("Netty server start up Error!");
-            }
-        }
-
-        return Arrays.asList(kaiNaiChannelFuture,yiNuoChannelFuture);
+        return Arrays.asList(channelFuture);
     }
 
 
     public void destroy() {
         log.info("Shutdown Netty Server...");
-        if (keNaiChannel != null) {
-            keNaiChannel.close();
+        if (channel != null) {
+            channel.close();
         }
-        if (yiNuoChannel != null) {
-            yiNuoChannel.close();
-        }
-        keNaiBossGroup.shutdownGracefully();
-        keNaiWorkerGroup.shutdownGracefully();
-        yiNuoBossGroup.shutdownGracefully();
-        yiNuoWorkerGroup.shutdownGracefully();
+        bossGroup.shutdownGracefully();
+        workerGroup.shutdownGracefully();
         log.info("Shutdown Netty Server Success!");
     }
 

@@ -27,4 +27,14 @@ public class RocketMQConstants {
      * 优惠券秒杀消息consumer
      */
     public static final String SECKILL_COUPON_CONSUMER = "seckill_coupon_consumer";
+
+    /**
+     * 重量数据落库消息topic
+     */
+    public static final String WEIGHT_DATA_STORAGE_TOPIC = "weight_data_storage_topic";
+
+    /**
+     * 重量数据落库消息consumer
+     */
+    public static final String WEIGHT_DATA_STORAGE_CONSUMER = "weight_data_storage_consumer";
 }

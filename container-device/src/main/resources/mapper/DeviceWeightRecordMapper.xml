@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fuguang.device.mapper.DeviceWeightRecordMapper">
+    
+    <resultMap id="BaseResultMap" type="cn.fuguang.entity.DeviceWeightRecordEntity">
+        <result column="id" jdbcType="INTEGER" property="id"/>
+        <result column="device_sn" jdbcType="VARCHAR" property="deviceSn"/>
+        <result column="lane_uid" jdbcType="VARCHAR" property="laneUid"/>
+        <result column="lane_weight" jdbcType="DECIMAL" property="laneWeight"/>
+        <result column="gate_status" jdbcType="CHAR" property="gateStatus"/>
+        <result column="weight_status" jdbcType="CHAR" property="weightStatus"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+    </resultMap>
+    
+    <insert id="insert" parameterType="cn.fuguang.entity.DeviceWeightRecordEntity">
+        INSERT INTO device_weight_record (
+            device_sn,
+            lane_uid,
+            lane_weight,
+            gate_status,
+            weight_status,
+            create_date
+        ) VALUES (
+            #{deviceSn,jdbcType=VARCHAR},
+            #{laneUid,jdbcType=VARCHAR},
+            #{laneWeight,jdbcType=DECIMAL},
+            #{gateStatus,jdbcType=CHAR},
+            #{weightStatus,jdbcType=CHAR},
+            NOW()
+        )
+    </insert>
+    
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO device_weight_record (
+            device_sn,
+            lane_uid,
+            lane_weight,
+            gate_status,
+            weight_status,
+            create_date
+        ) VALUES
+        <foreach collection="records" item="record" separator=",">
+            (
+                #{record.deviceSn,jdbcType=VARCHAR},
+                #{record.laneUid,jdbcType=VARCHAR},
+                #{record.laneWeight,jdbcType=DECIMAL},
+                #{record.gateStatus,jdbcType=CHAR},
+                #{record.weightStatus,jdbcType=CHAR},
+                NOW()
+            )
+        </foreach>
+    </insert>
+    
+    <select id="queryByDeviceSn" resultMap="BaseResultMap">
+        SELECT
+            id,
+            device_sn,
+            lane_uid,
+            lane_weight,
+            gate_status,
+            weight_status,
+            create_date
+        FROM device_weight_record
+        WHERE device_sn = #{deviceSn,jdbcType=VARCHAR}
+        <if test="startTime != null and startTime != ''">
+            AND create_date >= #{startTime,jdbcType=VARCHAR}
+        </if>
+        <if test="endTime != null and endTime != ''">
+            AND create_date <= #{endTime,jdbcType=VARCHAR}
+        </if>
+        ORDER BY create_date DESC
+    </select>
+</mapper>

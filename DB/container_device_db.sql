@@ -114,8 +114,10 @@ CREATE TABLE `device_info`  (
 DROP TABLE IF EXISTS `device_weight_record`;
 CREATE TABLE `device_weight_record`  (
   `id` int NOT NULL AUTO_INCREMENT COMMENT '主键id',
+  `device_sn` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '设备SN码',
   `lane_uid` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '货道id',
-  `lane_weight` int NOT NULL COMMENT '货道重量',
+  `lane_weight` decimal(10, 2) NOT NULL COMMENT '货道重量',
+  `gate_status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '仓门状态 0关门 1开门',
   `weight_status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '重量是否稳定 0否1是',
   `create_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE

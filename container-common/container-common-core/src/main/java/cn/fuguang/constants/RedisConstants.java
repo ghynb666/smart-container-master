@@ -13,6 +13,11 @@ public class RedisConstants {
     public static final String DEVICE_WEIGHT_INFO = "DEVICE_WEIGHT_INFO_";
 
     /**
+     * 重量信息大key（重量信息业务标识常量）
+     */
+    public static final String WEIGHT_INFO = "WEIGHT_INFO";
+
+    /**
      * 申请开门订单key
      */
     public static final String ORDER_OPEN_GATE = "ORDER_OPEN_GATE_";

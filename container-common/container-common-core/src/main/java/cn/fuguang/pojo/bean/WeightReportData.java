@@ -7,19 +7,9 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 @Data
-public class DeviceWeightBean implements Serializable {
+public class WeightReportData implements Serializable {
 
     private static final long serialVersionUID = -1L;
-
-    /**
-     * 设备id
-     */
-    private String deviceId;
-
-    /**
-     * 仓门id
-     */
-    private String gateId;
 
     /**
      * 设备SN码
@@ -27,12 +17,17 @@ public class DeviceWeightBean implements Serializable {
     private String deviceSn;
 
     /**
-     * 设备重量信息
+     * 时间戳
      */
-    private Map<Integer, BigDecimal> weightMap;
-    
+    private Long timestamp;
+
     /**
      * 仓门状态 0:关门 1:开门
      */
     private String gateStatus;
+
+    /**
+     * 重量信息 map<货道ID, 重量值>
+     */
+    private Map<Integer, BigDecimal> weightMap;
 }
