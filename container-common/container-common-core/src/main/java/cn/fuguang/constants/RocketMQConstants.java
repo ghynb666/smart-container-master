@@ -17,4 +17,14 @@ public class RocketMQConstants {
      * 通信服务事件消息consumer
      */
     public static final String COMMUNICATE_EVENT_CONSUMER = "communicate_event_consumer";
+
+    /**
+     * 优惠券秒杀消息topic
+     */
+    public static final String SECKILL_COUPON_TOPIC = "seckill_coupon_topic";
+
+    /**
+     * 优惠券秒杀消息consumer
+     */
+    public static final String SECKILL_COUPON_CONSUMER = "seckill_coupon_consumer";
 }

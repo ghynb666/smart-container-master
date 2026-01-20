@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>优惠券秒杀</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px auto;
+            max-width: 600px;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .coupon-card {
+            background-color: #f0f8ff;
+            border: 1px solid #add8e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .coupon-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff4500;
+        }
+        .coupon-info {
+            margin: 10px 0;
+            color: #666;
+        }
+        .seckill-btn {
+            background-color: #ff4500;
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+        .seckill-btn:hover {
+            background-color: #ff6347;
+        }
+        .seckill-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .result {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+            text-align: left;
+        }
+        .error {
+            background-color: #ffebee;
+            border-left: 6px solid #f44336;
+        }
+        .success {
+            background-color: #e8f5e8;
+            border-left: 6px solid #4CAF50;
+        }
+        /* 滑块验证样式 */
+        .slider-container {
+            width: 300px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .slider-track {
+            width: 100%;
+            height: 40px;
+            background-color: #e0e0e0;
+            border-radius: 20px;
+            position: relative;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        .slider-bar {
+            height: 100%;
+            background-color: #4CAF50;
+            border-radius: 20px;
+            width: 0;
+            transition: width 0.1s ease;
+        }
+        .slider-handle {
+            position: absolute;
+            top: -5px;
+            left: 0;
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border: 2px solid #4CAF50;
+            border-radius: 50%;
+            cursor: move;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .slider-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+        }
+        .slider-msg {
+            color: #666;
+            font-size: 14px;
+        }
+        .slider-msg.success {
+            color: #4CAF50;
+        }
+        .slider-msg.error {
+            color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <h1>优惠券秒杀活动</h1>
+    
+    <div class="coupon-card">
+        <div class="coupon-title">限时秒杀优惠券</div>
+        <div class="coupon-info">优惠券名称：10元现金券</div>
+        <div class="coupon-info">秒杀价格：0元</div>
+        <div class="coupon-info">库存数量：100张</div>
+        <div class="coupon-info">秒杀时间：2026-01-20 10:00:00 至 2026-01-20 12:00:00</div>
+        
+        <div class="form-group">
+            <label for="customerId">用户ID：</label>
+            <input type="text" id="customerId" value="CUST001" placeholder="请输入用户ID">
+        </div>
+        
+        <div class="form-group">
+            <label for="couponId">优惠券ID：</label>
+            <input type="text" id="couponId" value="COUPON001" placeholder="请输入优惠券ID">
+        </div>
+        
+        <!-- 滑块验证组件 -->
+        <div class="slider-container">
+            <div class="slider-track" id="sliderTrack">
+                <div class="slider-bar" id="sliderBar"></div>
+                <div class="slider-text" id="sliderText">向右拖动滑块完成验证</div>
+                <div class="slider-handle" id="sliderHandle" draggable="true">→</div>
+            </div>
+            <div class="slider-msg" id="sliderMsg"></div>
+        </div>
+        
+        <button class="seckill-btn" id="seckillBtn" onclick="seckill()" disabled>立即秒杀</button>
+    </div>
+    
+    <div id="result" class="result" style="display: none;"></div>
+
+    <script>
+        let isVerified = false;
+        let verifyToken = '';
+        
+        // 滑块验证逻辑
+        const sliderTrack = document.getElementById('sliderTrack');
+        const sliderBar = document.getElementById('sliderBar');
+        const sliderHandle = document.getElementById('sliderHandle');
+        const sliderText = document.getElementById('sliderText');
+        const sliderMsg = document.getElementById('sliderMsg');
+        const seckillBtn = document.getElementById('seckillBtn');
+        
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
+        let trackWidth = sliderTrack.offsetWidth;
+        let handleWidth = sliderHandle.offsetWidth;
+        let maxX = trackWidth - handleWidth;
+        
+        // 鼠标按下事件
+        sliderHandle.addEventListener('mousedown', startDrag);
+        sliderHandle.addEventListener('touchstart', startDrag);
+        
+        // 鼠标移动事件
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag);
+        
+        // 鼠标释放事件
+        document.addEventListener('mouseup', endDrag);
+        document.addEventListener('touchend', endDrag);
+        
+        function startDrag(e) {
+            isDragging = true;
+            startX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            sliderHandle.style.transition = 'none';
+            sliderBar.style.transition = 'none';
+        }
+        
+        function drag(e) {
+            if (!isDragging) return;
+            
+            const clientX = e.type.includes('mouse') ? e.clientX : e.touches[0].clientX;
+            currentX = clientX - startX;
+            
+            // 限制滑块范围
+            currentX = Math.max(0, Math.min(currentX, maxX));
+            
+            // 更新滑块位置
+            sliderHandle.style.left = currentX + 'px';
+            sliderBar.style.width = (currentX + handleWidth) + 'px';
+        }
+        
+        function endDrag() {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            // 判断是否验证成功
+            if (currentX >= maxX * 0.95) {
+                // 验证成功
+                isVerified = true;
+                verifyToken = 'verify_' + Date.now(); // 生成临时验证令牌
+                
+                sliderHandle.style.left = maxX + 'px';
+                sliderBar.style.width = trackWidth + 'px';
+                sliderText.textContent = '验证成功！';
+                sliderMsg.textContent = '验证通过，可以进行秒杀';
+                sliderMsg.className = 'slider-msg success';
+                seckillBtn.disabled = false;
+            } else {
+                // 验证失败，重置滑块
+                resetSlider();
+                sliderMsg.textContent = '验证失败，请重新拖动';
+                sliderMsg.className = 'slider-msg error';
+            }
+            
+            sliderHandle.style.transition = 'left 0.3s ease';
+            sliderBar.style.transition = 'width 0.3s ease';
+        }
+        
+        function resetSlider() {
+            isVerified = false;
+            verifyToken = '';
+            currentX = 0;
+            sliderHandle.style.left = '0px';
+            sliderBar.style.width = '0px';
+            sliderText.textContent = '向右拖动滑块完成验证';
+            seckillBtn.disabled = true;
+        }
+        
+        // 点击轨道也可以触发滑块移动
+        sliderTrack.addEventListener('click', function(e) {
+            if (isVerified) return;
+            
+            const rect = sliderTrack.getBoundingClientRect();
+            const clickX = e.clientX - rect.left - handleWidth / 2;
+            currentX = Math.max(0, Math.min(clickX, maxX));
+            
+            sliderHandle.style.left = currentX + 'px';
+            sliderBar.style.width = (currentX + handleWidth) + 'px';
+            
+            if (currentX >= maxX * 0.95) {
+                // 验证成功
+                isVerified = true;
+                verifyToken = 'verify_' + Date.now();
+                
+                sliderHandle.style.left = maxX + 'px';
+                sliderBar.style.width = trackWidth + 'px';
+                sliderText.textContent = '验证成功！';
+                sliderMsg.textContent = '验证通过，可以进行秒杀';
+                sliderMsg.className = 'slider-msg success';
+                seckillBtn.disabled = false;
+            }
+        });
+        
+        // 秒杀函数
+        function seckill() {
+            const customerId = document.getElementById('customerId').value;
+            const couponId = document.getElementById('couponId').value;
+            
+            if (!customerId || !couponId) {
+                showResult('请填写完整信息', 'error');
+                return;
+            }
+            
+            if (!isVerified || !verifyToken) {
+                showResult('请先完成滑块验证', 'error');
+                resetSlider();
+                return;
+            }
+            
+            const data = {
+                customerId: customerId,
+                couponConfigId: couponId,
+                verifyToken: verifyToken
+            };
+            
+            fetch('/api/seckill/doSeckill', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showResult(`秒杀成功！<br>订单号: ${data.data.orderNo}<br>请等待优惠券发放`, 'success');
+                    seckillBtn.disabled = true;
+                } else {
+                    showResult(`秒杀失败: ${data.message}`, 'error');
+                    resetSlider();
+                }
+            })
+            .catch(error => {
+                showResult(`请求失败: ${error.message}`, 'error');
+                resetSlider();
+            });
+        }
+        
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = message;
+            resultDiv.style.display = 'block';
+            
+            if (type === 'error') {
+                resultDiv.className = 'result error';
+            } else if (type === 'success') {
+                resultDiv.className = 'result success';
+            } else {
+                resultDiv.className = 'result';
+            }
+        }
+    </script>
+</body>
+</html>

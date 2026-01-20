@@ -27,5 +27,29 @@ public class RedisConstants {
      */
     public static final String SERVICE_HEART_COUNT_KEY = "SERVICE_HEART_COUNT_KEY_";
 
+    /**
+     * 秒杀优惠券库存key
+     */
+    public static final String SECKILL_COUPON_STOCK = "SECKILL_COUPON_STOCK_";
+
+    /**
+     * 秒杀优惠券用户记录key
+     */
+    public static final String SECKILL_COUPON_USER = "SECKILL_COUPON_USER_";
+
+    /**
+     * 秒杀优惠券基本信息key
+     */
+    public static final String SECKILL_COUPON_INFO = "SECKILL_COUPON_INFO_";
+
+    /**
+     * 秒杀分布式锁key
+     */
+    public static final String SECKILL_COUPON_LOCK = "SECKILL_COUPON_LOCK_";
+
+    /**
+     * 秒杀请求限流key
+     */
+    public static final String SECKILL_COUPON_LIMIT = "SECKILL_COUPON_LIMIT_";
 
 }

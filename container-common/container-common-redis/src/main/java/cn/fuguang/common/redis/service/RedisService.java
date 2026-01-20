@@ -76,4 +76,65 @@ public class RedisService
             throw ContainerException.REDIS_ERROR.newInstance("expire异常 key:" + key);
         }
     }
+
+    /**
+     * 自减操作
+     */
+    public Long decrement(String key) {
+        try {
+            return redisTemplate.opsForValue().decrement(key);
+        } catch (Exception e) {
+            log.error("redis decrement异常 key e:"+ key, e);
+            throw ContainerException.REDIS_ERROR.newInstance("decrement异常 key:" + key);
+        }
+    }
+
+    /**
+     * 自减指定步长
+     */
+    public Long decrement(String key, long delta) {
+        try {
+            return redisTemplate.opsForValue().decrement(key, delta);
+        } catch (Exception e) {
+            log.error("redis decrement异常 key e:"+ key, e);
+            throw ContainerException.REDIS_ERROR.newInstance("decrement异常 key:" + key);
+        }
+    }
+
+    /**
+     * 添加元素到集合
+     */
+    public Long sAdd(String key, Object... values) {
+        try {
+            return redisTemplate.opsForSet().add(key, values);
+        } catch (Exception e) {
+            log.error("redis sAdd异常 key e:"+ key, e);
+            throw ContainerException.REDIS_ERROR.newInstance("sAdd异常 key:" + key);
+        }
+    }
+
+    /**
+     * 检查元素是否在集合中
+     */
+    public Boolean sIsMember(String key, Object value) {
+        try {
+            return redisTemplate.opsForSet().isMember(key, value);
+        } catch (Exception e) {
+            log.error("redis sIsMember异常 key e:"+ key, e);
+            throw ContainerException.REDIS_ERROR.newInstance("sIsMember异常 key:" + key);
+        }
+    }
+
+    /**
+     * 获取集合大小
+     */
+    public Long sCard(String key) {
+        try {
+            return redisTemplate.opsForSet().size(key);
+        } catch (Exception e) {
+            log.error("redis sCard异常 key e:"+ key, e);
+            throw ContainerException.REDIS_ERROR.newInstance("sCard异常 key:" + key);
+        }
+    }
 }
+

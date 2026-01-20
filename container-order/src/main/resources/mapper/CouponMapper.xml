@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fuguang.order.mapper.CouponMapper">
+    <resultMap id="BaseResultMap" type="cn.fuguang.entity.CouponConfigEntity">
+        <result column="id" jdbcType="BIGINT" property="id"/>
+        <result column="uid" jdbcType="VARCHAR" property="couponConfigId"/>
+        <result column="product_uid" jdbcType="VARCHAR" property="productUid"/>
+        <result column="coupon_type" jdbcType="VARCHAR" property="couponType"/>
+        <result column="coupon_money" jdbcType="DECIMAL" property="couponMoney"/>
+        <result column="coupon_all_categories" jdbcType="VARCHAR" property="couponAllCategories"/>
+        <result column="coupon_count" jdbcType="BIGINT" property="couponCount"/>
+        <result column="coupon_valid_date" jdbcType="BIGINT" property="couponValidDate"/>
+        <result column="coupon_image" jdbcType="VARCHAR" property="couponImage"/>
+        <result column="coupon_no" jdbcType="VARCHAR" property="couponNo"/>
+        <result column="coupon_name" jdbcType="VARCHAR" property="couponName"/>
+        <result column="coupon_receive_valid_date" jdbcType="BIGINT" property="couponReceiveValidDate"/>
+        <result column="coupon_total_money" jdbcType="DECIMAL" property="couponTotalMoney"/>
+        <result column="coupon_customer_limit" jdbcType="BIGINT" property="couponCustomerLimit"/>
+        <result column="coupon_customer_amount_limit" jdbcType="BIGINT" property="couponCustomerAmountLimit"/>
+        <result column="coupon_issued_count" jdbcType="BIGINT" property="couponIssuedCount"/>
+        <result column="coupon_deadline" property="couponDeadline"/>
+        <result column="coupon_explain" jdbcType="VARCHAR" property="couponDesc"/>
+        <result column="is_seckill" jdbcType="VARCHAR" property="isSeckill"/>
+        <result column="seckill_start_time" property="seckillStartTime"/>
+        <result column="seckill_end_time" property="seckillEndTime"/>
+        <result column="create_date" property="createTime"/>
+        <result column="remarks" jdbcType="VARCHAR" property="remarks"/>
+    </resultMap>
+
+    <select id="selectByCouponConfigId" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select *
+        from coupon_config
+        where uid = #{couponConfigId,jdbcType=VARCHAR}
+        and del_flag = '0'
+    </select>
+
+    <update id="updateIssuedCount" parameterType="java.lang.String">
+        update coupon_config
+        set coupon_issued_count = coupon_issued_count + 1,
+            update_date = now()
+        where uid = #{couponConfigId,jdbcType=VARCHAR}
+        and del_flag = '0'
+    </update>
+</mapper>

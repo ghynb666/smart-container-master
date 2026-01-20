@@ -97,4 +97,19 @@ public class CouponConfigEntity {
 
     private Date createTime;
 
+    /**
+     * 是否为秒杀券 0:否 1:是
+     */
+    private String isSeckill;
+
+    /**
+     * 秒杀开始时间
+     */
+    private Date seckillStartTime;
+
+    /**
+     * 秒杀结束时间
+     */
+    private Date seckillEndTime;
+
 }
