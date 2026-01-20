@@ -31,4 +31,15 @@ public class OrderFeignServiceImpl implements OrderFeignService {
         log.info("接收到channel预授权回调处理完成 req:{}", JSONObject.toJSONString(reqDTO));
 
     }
+
+    @Override
+    public void payComplete(cn.fuguang.api.order.dto.req.PayCompleteReqDTO reqDTO) {
+        log.info("接收到设备服务支付完成请求 req:{}", JSONObject.toJSONString(reqDTO));
+        try {
+            orderBiz.handlePayComplete(reqDTO);
+        } catch (Exception e) {
+            log.error("接收到设备服务支付完成请求 系统异常" + e);
+        }
+        log.info("接收到设备服务支付完成请求处理完成 req:{}", JSONObject.toJSONString(reqDTO));
+    }
 }

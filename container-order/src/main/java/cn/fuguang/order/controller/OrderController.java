@@ -39,6 +39,23 @@ public class OrderController {
         log.info("用户扫码下单结果 res:{}", JSONObject.toJSONString(res));
         return BaseResult.success(res);
     }
+    
+    /**
+     * 前端扫码下单API
+     */
+    @PostMapping("/api/scan/createOrder")
+    public BaseResult<ScanCreateOrderRes> apiScanCreateOrder(@RequestBody @Valid ScanCreateOrderReq req){
+        log.info("前端扫码下单 req:{}", JSONObject.toJSONString(req));
+        ScanCreateOrderRes res;
+        try {
+            res = orderBiz.scanCreateOrder(req);
+        } catch (Exception e) {
+            log.error("前端扫码下单 系统异常" + e);
+            return BaseResult.fail("系统异常, 请稍后重试");
+        }
+        log.info("前端扫码下单结果 res:{}", JSONObject.toJSONString(res));
+        return BaseResult.success(res);
+    }
 
 
 }

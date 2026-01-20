@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能货柜扫码下单</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px auto;
+            max-width: 600px;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .scan-area {
+            border: 2px dashed #ccc;
+            padding: 40px;
+            margin: 30px 0;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+        }
+        .scan-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+        .scan-btn:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #e7f3fe;
+            border-left: 6px solid #2196F3;
+            text-align: left;
+        }
+        .error {
+            background-color: #ffebee;
+            border-left: 6px solid #f44336;
+        }
+        .form-group {
+            margin: 15px 0;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>智能货柜扫码下单</h1>
+    <div class="scan-area">
+        <h2>请扫描货柜二维码</h2>
+        <p>或手动输入设备信息</p>
+        
+        <div class="form-group">
+            <label for="deviceId">设备ID:</label>
+            <input type="text" id="deviceId" value="DEV001" placeholder="请输入设备ID">
+        </div>
+        
+        <div class="form-group">
+            <label for="gateId">仓门ID:</label>
+            <input type="text" id="gateId" value="GATE001" placeholder="请输入仓门ID">
+        </div>
+        
+        <div class="form-group">
+            <label for="customerId">用户ID:</label>
+            <input type="text" id="customerId" value="CUST001" placeholder="请输入用户ID">
+        </div>
+        
+        <div class="form-group">
+            <label for="sourceType">支付方式:</label>
+            <select id="sourceType" style="width: 100%; padding: 8px; box-sizing: border-box;">
+                <option value="ALI">支付宝</option>
+                <option value="WECHAT">微信支付</option>
+            </select>
+        </div>
+        
+        <button class="scan-btn" onclick="scanOrder()">模拟扫码下单</button>
+    </div>
+    
+    <div id="result" class="result" style="display: none;"></div>
+
+    <script>
+        function scanOrder() {
+            const deviceId = document.getElementById('deviceId').value;
+            const gateId = document.getElementById('gateId').value;
+            const customerId = document.getElementById('customerId').value;
+            const sourceType = document.getElementById('sourceType').value;
+            
+            if (!deviceId || !gateId || !customerId) {
+                showResult('请填写完整的设备信息', true);
+                return;
+            }
+            
+            const data = {
+                deviceId: deviceId,
+                gateId: gateId,
+                customerId: customerId,
+                sourceType: sourceType
+            };
+            
+            fetch('/api/scan/createOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showResult(`下单成功！<br>订单号: ${data.data.orderNo}<br>签约信息: ${data.data.signStr}`, false);
+                } else {
+                    showResult(`下单失败: ${data.message}`, true);
+                }
+            })
+            .catch(error => {
+                showResult(`请求失败: ${error.message}`, true);
+            });
+        }
+        
+        function showResult(message, isError) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = message;
+            resultDiv.style.display = 'block';
+            if (isError) {
+                resultDiv.className = 'result error';
+            } else {
+                resultDiv.className = 'result';
+            }
+        }
+    </script>
+</body>
+</html>
