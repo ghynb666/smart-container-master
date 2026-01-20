@@ -1,0 +1,62 @@
+# Compiled output
+target/
+build/
+*.class
+
+# Dependency directories
+.m2/
+.gradle/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+*.iml
+*.ipr
+*.iws
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Log files
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Node.js dependencies
+node_modules/
+
+# Test reports
+TEST-*.xml
+jacoco.exec
+
+# Maven
+*.war
+*.ear
+
+# Gradle
+gradle-app.setting
+
+# Coverage report
+coverage/
+*.lcov
+
+# npm
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Local history
+.history/
