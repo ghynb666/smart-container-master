@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.fuguang.account.mapper.CustomerMapper">
+  <resultMap id="BaseResultMap" type="cn.fuguang.entity.CustomerEntity">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="customer_id" jdbcType="VARCHAR" property="customerId" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="wechat_open_id" jdbcType="VARCHAR" property="wechatOpenId" />
+    <result column="ali_open_id" jdbcType="VARCHAR" property="aliOpenId" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="status" jdbcType="DECIMAL" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, customer_id, password, user_name, wechat_open_id, ali_open_id, mobile, status, create_time, update_time, remarks
+  </sql>
+  
+  <insert id="insert" parameterType="cn.fuguang.entity.CustomerEntity">
+    insert into customer (customer_id, password, user_name, 
+      wechat_open_id, ali_open_id, mobile, 
+      status, create_time, update_time, 
+      remarks)
+    values (#{customerId,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{wechatOpenId,jdbcType=VARCHAR}, #{aliOpenId,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, 
+      #{status,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{remarks,jdbcType=VARCHAR})
+  </insert>
+  
+  <select id="selectByUsername" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from customer
+    where user_name = #{username,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from customer
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+</mapper>

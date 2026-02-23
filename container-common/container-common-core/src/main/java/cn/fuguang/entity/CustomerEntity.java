@@ -18,6 +18,11 @@ public class CustomerEntity {
     private String customerId;
 
     /**
+     * 密码
+     */
+    private String password;
+
+    /**
      * 姓名
      */
     private String userName;

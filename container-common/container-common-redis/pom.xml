@@ -30,6 +30,12 @@
       <artifactId>container-common-core</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
+
+    <dependency>
+      <groupId>cn.dev33</groupId>
+      <artifactId>sa-token-dao-redis-jackson</artifactId>
+      <version>1.37.0</version>
+    </dependency>
   </dependencies>
 
 </project>
